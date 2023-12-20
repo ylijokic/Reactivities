@@ -5,7 +5,14 @@ using Persistance;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices(builder.Configuration);
+
+builder.Services.AddDbContext<DataContext>(opt => 
+{
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 if (builder.Environment.IsDevelopment())

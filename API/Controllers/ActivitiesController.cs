@@ -1,25 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Application.Activities;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistance;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-
-        [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        private readonly DataContext _context;
+        public ActivitiesController(DataContext context)
         {
-            return await Mediator.Send(new List.Query());
+            _context = context;
         }
 
-        [HttpGet("{id}")] // activities/id
+        [HttpGet] // api/activities
+        public async Task<ActionResult<List<Activity>>> GetActivities()
+        {
+            return await _context.Activities.ToListAsync();
+        }
+
+        [HttpGet("{id}")] // api/activities/id
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
-            return await Mediator.Send(new Details.Query{Id = id});
+            return await _context.Activities.FindAsync(id);
         }
 
         [HttpPost]
