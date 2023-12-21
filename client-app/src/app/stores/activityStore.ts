@@ -27,14 +27,14 @@ export default class ActivityStore {
                 activity.date = activity.date.split('T')[0];
                 this.activityRegistry.set(activity.id, activity);
             })
-            this.setLoadinginInitial(false);
+            this.setLoadingInitial(false);
         } catch (error) {
             console.log(error);
-            this.setLoadinginInitial(false);
+            this.setLoadingInitial(false);
         }
     }
 
-    setLoadinginInitial = (state: boolean) => {
+    setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
 
