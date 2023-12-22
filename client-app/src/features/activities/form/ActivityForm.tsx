@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom';
 export default observer( function ActivityForm() {
     const {activityStore } = useStore();
     const {
-        selectedActivity,
         createActivity,
         updateActivity,
         loading,

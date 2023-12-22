@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
-import { Button, Card, Image } from 'semantic-ui-react';
+import { useEffect } from 'react';
+import { Grid, GridColumn } from 'semantic-ui-react';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import ActivityDetailsHeader from './ActivityDetailsHeader';
+import ActivityDetailsInfo from './ActivityDetailsInfo';
+import ActivityDetailsChat from './ActivityDetailsChat';
+import ActivityDetailsSideBar from './ActivityDetailsSideBar';
 
 
 export default observer(function ActivityDetails() {
@@ -22,24 +25,16 @@ export default observer(function ActivityDetails() {
 
     return(
         <>
-            <Card fluid>
-                <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
-                <Card.Content>
-                <Card.Header>{activity.title}</Card.Header>
-                <Card.Meta>
-                    <span>{activity.date}</span>
-                </Card.Meta>
-                <Card.Description>
-                    {activity.description}
-                </Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                    <Button.Group width='2'>
-                        <Button as={Link} to={`/manage/${activity.id}`} basic color='blue' content='Edit' />
-                        <Button as={Link} to="/activities" basic color='grey' content='Cancel' />
-                    </Button.Group>
-                </Card.Content>
-            </Card>
+            <Grid>
+                <GridColumn width={10}>
+                    <ActivityDetailsHeader activity={activity} />
+                    <ActivityDetailsInfo activity={activity} />
+                    <ActivityDetailsChat />
+                </GridColumn>
+                <GridColumn width={6}>
+                    <ActivityDetailsSideBar />
+                </GridColumn>
+            </Grid>
         </>
     )
 })
