@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import {v4 as uuid} from 'uuid'
+import { format } from "date-fns";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -17,14 +18,15 @@ export default class ActivityStore {
 
     get activitiesByDate() {
         return Array.from(this.activityRegistry.values()).sort((a, b) => 
-            Date.parse(a.date) - Date.parse(b.date));
+            a.date!.getTime() - b.date!.getTime());
     }
 
     get groupedActivities() {
         const groupedActivitiesByDate = this.activitiesByDate.reduce((activities, activity) => {
-            const existingDates = activities.get(activity.date) ?? new Array<Activity>();
+            const date = format(activity.date!, 'dd MMM yyyy');
+            const existingDates = activities.get(date) ?? new Array<Activity>();
             existingDates.push(activity);
-            activities.set(activity.date, existingDates);
+            activities.set(date, existingDates);
             return activities;
         }, new Map<string, Activity[]>());
 
@@ -36,7 +38,7 @@ export default class ActivityStore {
         try {
             const activities = await agent.Activities.list();
             activities.forEach(activity => {
-                activity.date = activity.date.split('T')[0];
+                activity.date = new Date(activity.date!);
                 this.activityRegistry.set(activity.id, activity);
             })
             this.setLoadingInitial(false);
@@ -55,7 +57,7 @@ export default class ActivityStore {
             this.setLoadingInitial(true);
             try {
                 activity = await agent.Activities.details(id);
-                activity.date = activity.date.split('T')[0];
+                activity.date = new Date(activity.date!);
                 this.activityRegistry.set(activity.id, activity);
                 runInAction(() => {
                     this.selectedActivity = activity;
