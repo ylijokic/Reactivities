@@ -12,6 +12,7 @@ namespace Persistance
 
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         // Configure Many-to-Many relationship
         protected override void OnModelCreating(ModelBuilder builder)
